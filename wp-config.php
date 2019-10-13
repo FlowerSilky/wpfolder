@@ -18,24 +18,47 @@
  * @package WordPress
  */
 
-// ** Параметры MySQL: Эту информацию можно получить у вашего хостинг-провайдера ** //
-/** Имя базы данных для WordPress */
-define( 'DB_NAME', 'wpfolder' );
+ // ** Heroku Postgres settings - from Heroku Environment ** //
+$db = parse_url($_ENV["DATABASE_URL"]);
 
-/** Имя пользователя MySQL */
-define( 'DB_USER', 'wpfolder' );
+/** The name of the database for WordPress */
+define('DB_NAME', trim($db["path"],"/"));
 
-/** Пароль к базе данных MySQL */
-define( 'DB_PASSWORD', '' );
+/** MySQL database username */
+define('DB_USER', $db["user"]);
 
-/** Имя сервера MySQL */
-define( 'DB_HOST', 'localhost' );
+/** MySQL database password */
+define('DB_PASSWORD', $db["pass"]);
 
-/** Кодировка базы данных для создания таблиц. */
-define( 'DB_CHARSET', 'utf8' );
+/** MySQL hostname */
+define('DB_HOST', $db["host"]);
 
-/** Схема сопоставления. Не меняйте, если не уверены. */
-define( 'DB_COLLATE', '' );
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+// // ** Параметры MySQL: Эту информацию можно получить у вашего хостинг-провайдера ** //
+// /** Имя базы данных для WordPress */
+// define( 'DB_NAME', 'wpfolder' );
+
+// /** Имя пользователя MySQL */
+// // define( 'DB_USER', 'wpfolder' );
+// define('DB_USER',     'postgres');
+
+// /** Пароль к базе данных MySQL */
+// // define( 'DB_PASSWORD', '' );
+// define('DB_PASSWORD', 'postgres');
+
+// /** Имя сервера MySQL */
+// define( 'DB_HOST', 'localhost' );
+
+// /** Кодировка базы данных для создания таблиц. */
+// define( 'DB_CHARSET', 'utf8' );
+
+// /** Схема сопоставления. Не меняйте, если не уверены. */
+// define( 'DB_COLLATE', '' );
 
 /**#@+
  * Уникальные ключи и соли для аутентификации.
@@ -85,5 +108,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
 }
 
+if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO'] ) {
+    $_SERVER['HTTPS'] = 'on';
+}
 /** Инициализирует переменные WordPress и подключает файлы. */
 require_once( ABSPATH . 'wp-settings.php' );
